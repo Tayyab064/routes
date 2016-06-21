@@ -1,0 +1,94 @@
+<style>
+   #map {
+    height: 100vh;
+  }
+</style>
+<div class="container-fluid" style="background-color: white;">
+	<div class="row">
+		<div class="col-md-3" style="padding: 0 0;">
+
+			<h1>ROUTES</h1>
+			<ul class="nav">
+		      <li><a href="#menu-pane">Visualize</a></li>
+		      <li><a href="#">Accounts</a></li>
+		      <li><a href="#">Places</a></li>
+		      <li><a href="#" data-toggle="modal" data-target="#myModal">Routes</a></li>
+			  <li><%= link_to "Signout", destroy_user_session_path, :method => "DELETE" %></li>
+		    </ul>
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Create Route</h4>
+      </div>
+      <div class="modal-body">
+        			<%= form_tag({controller: "route", action: "create"}, method: "post") do %>
+						<div class="form-group">
+						    <%= label_tag(:route_name, "Route Name:") %>
+				  			<%= text_field_tag :route_name , nil , class: "form-control"%>
+						</div>
+
+						<div class="form-group">
+						    <%= label_tag(:estimated_time, "Estimated Time:") %>
+						    <%= text_field_tag(:estimated_time,  nil , class: "form-control") %>
+						</div>
+
+						<div class="form-group">
+						    <%= label_tag(:starting_point, "Starting Point:") %>
+				  			<%= text_field_tag :starting_point , nil , class: "form-control"%>
+						</div>
+					  
+					  </div>
+      <div class="modal-footer">
+      	<%= submit_tag "Submit" , class: "btn btn-default" %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+					  
+					<% end %>
+      
+    </div>
+
+  </div>
+</div>
+
+
+		</div>
+		<div class="col-md-9" style="padding: 0 0;">
+			<div id="map"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+  function initMap() {
+    var mapDiv = document.getElementById('map');
+    var map = new google.maps.Map(mapDiv, {
+        center: {lat: 44.540, lng: -78.546},
+        zoom: 12
+    });
+
+    /*var infoWindow = new google.maps.InfoWindow({map: map});*/
+
+    if (navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	      var pos = {
+	        lat: position.coords.latitude,
+	        lng: position.coords.longitude
+	      };
+
+	      map.setCenter(pos);
+	    }, function() {
+	      handleLocationError(true, infoWindow, map.getCenter());
+	    });
+	  } else {
+	    // Browser doesn't support Geolocation
+	    handleLocationError(false, infoWindow, map.getCenter());
+	  }
+  }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoUyblkGqwp2lFuWQb0v_-J_mI5sYJYPc&libraries=places&callback=initMap"
+async defer></script>
