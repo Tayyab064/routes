@@ -116,7 +116,7 @@
           center: {lat: 31.510878, lng: 74.344726}
         });
 
-        if (navigator.geolocation) {
+        /*if (navigator.geolocation) {
 	    navigator.geolocation.getCurrentPosition(function(position) {
 	      var pos = {
 	        lat: position.coords.latitude,
@@ -129,20 +129,14 @@
 	  } else {
 	    // Browser doesn't support Geolocation
 	    handleLocationError(false, infoWindow, map.getCenter());
-	  }
+	  }*/
         //directionsDisplay.setMap(map);
 
     
     var markers = [];
             
             //map.setOptions({ minZoom: 1, maxZoom: 4 });
-          
-
-
-
-
-          //Route
-        /*latorg = 31.510878;
+        latorg = 31.510878;
         lngorg = 74.344726;
         var rClick = {lat: latorg, lng: lngorg};
             
@@ -154,26 +148,33 @@
 	    })
 	    marker.push(marker1);
 
-	    latdest = 31.504163;
-        lngdest = 74.331526;
-        
-        
-        var rClick2 = {lat: latdest, lng: lngdest};
-        
-        marker12 = new google.maps.Marker({
-                map: map,
-                position: rClick2,
-                
-                title:'Account Name: '
-        })
-        marker.push(marker12);
-        
-        var directionsDisplay = new google.maps.DirectionsRenderer;
-        var directionsService = new google.maps.DirectionsService;
-        directionsDisplay.setMap(map);
+	    var counter = 0 ;
+	    var colour = new Array("red", "blue", "green" , "yellow");
+		<% @csv.each do |row| %>
 
-        calculateAndDisplayRoute(directionsService, directionsDisplay);
-*/
+			latdest = <%= row.to_hash['lat'] %>;
+	        lngdest = <%= row.to_hash['long'] %>;
+	        
+	        
+	        var rClick2 = {lat: latdest, lng: lngdest};
+	        
+	        marker12 = new google.maps.Marker({
+	                map: map,
+	                position: rClick2,
+	                
+	                title:'Account Name: '
+	        })
+	        marker.push(marker12); 
+
+	        var directionsDisplay = new google.maps.DirectionsRenderer({ polylineOptions: { strokeColor: colour[counter] } });
+	        var directionsService = new google.maps.DirectionsService;
+	        directionsDisplay.setMap(map);
+
+	        calculateAndDisplayRoute(directionsService, directionsDisplay);
+	        counter += 1 ;
+		<% end %>
+	    
+
           ///code for second file
            /* google.maps.event.addListener(map, "rightclick", function(event) {
         
@@ -284,7 +285,7 @@ function setMapOnAll(map) {
                     //icon: icon
                   }));*/
                 } else {
-                  alert('Geocode was not successful due to: ' + status);
+                  console.log('Geocode was not successful due to: ' + status);
                 }
               };
             };

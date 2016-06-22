@@ -1,5 +1,6 @@
-<div>
+<div style="color: white;">
 	<% @rout.each do |route| %>
-	<h1><%= route.route_name %></h1>
+	<strong><%= route.route_name %></strong>: <%= route.starting_point %>
+	<br>
 	<% end %>	
 </div>
