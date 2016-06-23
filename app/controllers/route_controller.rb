@@ -34,4 +34,40 @@ class RouteController < ApplicationController
 		end
 	end
 
+	def show
+		@route = Route.find(params[:id])
+	end
+
+	def edit
+		@route = Route.find(params[:id])
+	end
+
+	def update
+		p params
+		@route = Route.find(params[:id])
+	    respond_to do |format|
+	      if @route.update(route_name: params[:route_name] , estimated_time: params[:estimated_time] , starting_point: params[:starting_point])
+	        format.html { redirect_to route_path, notice: 'Route was successfully updated.' }
+	        format.json { render :index, status: :updated, location: @route }
+	      else
+	        format.html { render :edit }
+	        format.json { render json: @home.errors, status: :unprocessable_entity }   
+	      end
+	    end
+	end
+
+	def destroy
+		@route = Route.find(params[:id])
+    	@route.destroy
+  
+    	redirect_to :back , notice: 'Route was successfully destroyed.'
+	end
+
+
+	private
+
+	def route_update_params
+
+	end
+
 end

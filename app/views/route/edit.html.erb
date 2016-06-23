@@ -58,34 +58,33 @@
 
 
 		</div>
-		<div class="col-md-10" style="padding: 0 0; height: 100vh; background-color: #f5f5f5; overflow: overlay;">
-			<table class="table table-hover">
-			  <thead>
-			    <tr>
-			      <th colspan="1"></th>
-			      <th>Route Name</th>
-			      <th>Estimated Time</th>
-			      <th>Starting Point</th>
-			      <th colspan="3"></th>
-			    </tr>
-			  </thead>
+		<div class="col-md-10" style="padding: 0 0; height: 100vh; background-color: #f5f5f5; overflow: hidden;">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4" style="margin-top: 20px;">
+					<%= form_tag({controller: "route", action: "update"}, method: "put" , multipart: true ) do %>
+						<div class="form-group">
+						    <%= label_tag(:route_name, "Route Name:") %>
+				  			<%= text_field_tag :route_name , nil , class: "form-control"%>
+						</div>
 
-			  <tbody>
-			  	<% count=0 %>
-			    <% @rout.each do |rout| %>
-			      <% count = count + 1 %>
-			      <tr>
-			        <td><%= count %></td>
-			        <td><%= rout.route_name %></td>
-			        <td><%= rout.estimated_time %></td>
-			        <td><%= rout.starting_point %></td>
-			        <td><%= link_to 'Show', route_show_path(rout) %></td>
-			        <td><%= link_to 'Edit', edit_route_path(rout) %></td>
-			        <td><%= link_to 'Destroy', route_destroy_path(rout), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-			      </tr>
-			    <% end %>
-			  </tbody>
-			</table>
+						 <div class="form-group">
+						    <%= label_tag(:estimated_time, "Estimated Time:") %>
+						    <%= text_field_tag(:estimated_time,  nil , class: "form-control") %>
+						</div>
+
+						<div class="form-group">
+						    <%= label_tag(:starting_point, "Starting Point:") %>
+				  			<%= text_field_tag :starting_point , nil , class: "form-control"%>
+						</div>
+
+						<!-- <div class="form-group">
+						    <%= label_tag(:file_upload, "Upload File:") %>
+				  			<%= file_field_tag :file_upload , class: "form-control" %>
+						</div> -->
+							<%= submit_tag "Update" , class: "btn btn-default" %>
+					<% end %>
+				</div>
+			</div>				
 		</div>
 	</div>
 </div>

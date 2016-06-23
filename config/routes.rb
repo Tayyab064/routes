@@ -4,6 +4,11 @@ Rails.application.routes.draw do
   root "index#index"
   post "route" => "route#create"
   get "route" => "route#index"
+  get "route/:id" => "route#show" , as: "route_show"
+  delete "route/:id" => "route#destroy" , as: "route_destroy"
+
+  resources :route , only: [:edit , :update]
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
