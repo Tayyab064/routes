@@ -46,7 +46,7 @@ class RouteController < ApplicationController
 		p params
 		@route = Route.find(params[:id])
 	    respond_to do |format|
-	      if @route.update(route_name: params[:route_name] , estimated_time: params[:estimated_time] , starting_point: params[:starting_point])
+	      if @route.update(route_update_params)
 	        format.html { redirect_to route_path, notice: 'Route was successfully updated.' }
 	        format.json { render :index, status: :updated, location: @route }
 	      else
@@ -67,7 +67,7 @@ class RouteController < ApplicationController
 	private
 
 	def route_update_params
-
+		params.require(:route).permit(:route_name , :starting_point , :estimated_time)
 	end
 
 end
