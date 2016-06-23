@@ -69,3 +69,13 @@
 	</div>
 </div>
 
+<script type="text/javascript">
+	var input = document.getElementById("starting_point");
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    //autocomplete.bindTo(bounds, map);
+
+    google.maps.event.addListener(autocomplete, "Starting point", function()
+    {
+        console.log("autocomplete");
+    });
+</script>

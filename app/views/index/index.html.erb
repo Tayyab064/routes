@@ -140,7 +140,14 @@
             //map.setOptions({ minZoom: 1, maxZoom: 4 });
           
 
+    var input = document.getElementById("starting_point");
+    var autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.bindTo(bounds, map);
 
+    google.maps.event.addListener(autocomplete, "Starting point", function()
+    {
+        console.log("autocomplete");
+    });
 
 
           //Route
@@ -236,11 +243,6 @@ function setMapOnAll(map) {
   }
 }
 
-function autocomp(){
-  var input = document.getElementById("starting_point").value;
-  console.log(input);
-  var autocomplete = new google.maps.places.Autocomplete(input);
-}
     
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     setMapOnAll(null);
