@@ -63,6 +63,14 @@ class RouteController < ApplicationController
     	redirect_to :back , notice: 'Route was successfully destroyed.'
 	end
 
+	def csvfile
+		@route = Route.all
+		respond_to do |format|
+		    format.html
+		    format.csv { send_data @route.to_csv }
+		end
+	end
+
 
 	private
 

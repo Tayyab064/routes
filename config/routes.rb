@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   delete "route/:id" => "route#destroy" , as: "route_destroy"
   patch "route.:id" => "route#update"
   put "route.:id" => "route#update"
+  get "routes" => "route#csvfile" , as: "route_file"
 
   resources :route , only: [:edit]
 
