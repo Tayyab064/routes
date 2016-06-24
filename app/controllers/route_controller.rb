@@ -8,7 +8,9 @@ class RouteController < ApplicationController
 	def create
 
 		if params[:route_name].present? && params[:file_upload].present?
-			@rout = Route.create(route_name: params[:route_name] , estimated_time: params[:estimated_time] , starting_point: params[:starting_point])
+			s_time = params[:starting_time] + " " + params[:time]
+			p s_time
+			@rout = Route.create(route_name: params[:route_name] , estimated_time: params[:estimated_time] , starting_point: params[:starting_point] , start_time: s_time)
 
 			file_data = params[:file_upload]
 			if file_data.respond_to?(:read)
@@ -25,6 +27,7 @@ class RouteController < ApplicationController
 				@csv = CSV.parse(xml_contents, :headers => true)
 				@csv.each do |row|
 					p row.to_hash
+					hist = Histroy.create(address: row.to_hash['address'] , route_id: @rout.id)
 				end
 			else
 				p "Invalid file"
@@ -45,6 +48,27 @@ class RouteController < ApplicationController
 	def update
 		p params
 		@route = Route.find(params[:id])
+		
+		file_data = params[:file_upload]
+		if file_data.respond_to?(:read)
+		  xml_contents = file_data.read
+		  p "read"
+		elsif file_data.respond_to?(:path)
+		  xml_contents = File.read(file_data.path)
+		  p "path"
+		else
+		  logger.error "Bad file_data: #{file_data.class.name}: #{file_data.inspect}"
+		end
+		if xml_contents.present? && file_data.original_filename.split('.')[-1]=='csv'
+			@csv = CSV.parse(xml_contents, :headers => true)
+			@csv.each do |row|
+				p row.to_hash
+				hist = Histroy.create(address: row.to_hash['address'] , route_id: @route.id)
+			end
+		else
+			p "Invalid file"
+		end
+
 	    respond_to do |format|
 	      if @route.update(route_update_params)
 	        format.html { redirect_to route_path, notice: 'Route was successfully updated.' }
@@ -68,6 +92,7 @@ class RouteController < ApplicationController
 		respond_to do |format|
 		    format.html
 		    format.csv { send_data @route.to_csv }
+		    format.xls { send_data @route.to_csv(col_sep: "\t") }
 		end
 	end
 

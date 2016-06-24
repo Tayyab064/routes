@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160623083210) do
+ActiveRecord::Schema.define(version: 20160624115045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "histroys", force: :cascade do |t|
+    t.string   "address"
+    t.integer  "route_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.float    "latitude"
+    t.float    "longitude"
+  end
 
   create_table "routes", force: :cascade do |t|
     t.string   "route_name"
@@ -23,6 +32,9 @@ ActiveRecord::Schema.define(version: 20160623083210) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.string   "estimated_time"
+    t.time     "start_time"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   create_table "users", force: :cascade do |t|

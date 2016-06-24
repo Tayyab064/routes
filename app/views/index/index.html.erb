@@ -12,9 +12,9 @@
 
 			<h1 class="roout" style="margin-left: 10px;">ROUTES</h1>
 			<ul class="nav">
-		      <li><a href="#"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Visualize</a></li> 
-		      <li><a href="#"><i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;Places</a></li>
-		      <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-road" aria-hidden="true"></i>&nbsp;Routes</a></li>
+		      <!-- <li><a href="#"><i class="fa fa-eye" aria-hidden="true"></i>&nbsp;Visualize</a></li> 
+		      <li><a href="#"><i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;Places</a></li> -->
+		      <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-road" aria-hidden="true"></i>&nbsp;New Route</a></li>
           <li><%= link_to " Export Data", "#{route_file_path}.csv" , class: "fa fa-file-excel-o" %></li>
           <li><%= link_to " Histroy", route_path, class: "fa fa-book" %></li>
 			  <li><%= link_to "  Signout", destroy_user_session_path, class: "fa fa-sign-out" , :method => "DELETE" %></li>
@@ -40,6 +40,12 @@
 						    <%= label_tag(:estimated_time, "Estimated Time:") %>
 						    <%= text_field_tag(:estimated_time,  nil , class: "form-control") %>
 						</div> -->
+
+            <div class="form-group">
+                <%= label_tag(:starting_time, "Starting time:") %>
+                <%= text_field_tag :starting_time , nil , class: "form-control" , style: "width: 80%;" %>
+                <%= select_tag "time", "<option>AM</option><option>PM</option>".html_safe , class: "form-control" , style: "    width: 20%;float: right;margin-top: -34px"%>
+            </div>
 
 						<div class="form-group">
 						    <%= label_tag(:starting_point, "Starting Point:") %>

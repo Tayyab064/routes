@@ -1,5 +1,8 @@
 class Route < ActiveRecord::Base
+	has_many :histroys
 
+	geocoded_by :starting_point   # can also be an IP address
+	after_validation :geocode
 	
 	def self.to_csv(options = {})
 	  CSV.generate(options) do |csv|
