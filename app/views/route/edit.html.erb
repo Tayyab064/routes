@@ -13,7 +13,7 @@
 		      <li><a href="#"><i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;Places</a></li> -->
 		      <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-road" aria-hidden="true"></i>&nbsp;New Route</a></li>
 		      <li><%= link_to " Export Data", "#{route_file_path}.csv" , class: "fa fa-file-excel-o" %></li>
-          <li><%= link_to " Histroy", route_path, class: "fa fa-book" %></li>
+          <li><%= link_to " History", route_path, class: "fa fa-book" %></li>
 			  <li><%= link_to "  Signout", destroy_user_session_path, class: "fa fa-sign-out" , :method => "DELETE" %></li>
 		    </ul>
 <!-- Modal -->
@@ -92,9 +92,12 @@
 						</div>
 
 						 <div class="form-group">
-						    <%= f.label(:estimated_time, "Estimated Time:") %>
-						    <%= f.text_field(:estimated_time,   class: "form-control") %>
-						</div>
+						 	<% ckr = f.object.start_time.to_time.strftime("%p")=="PM" ? 'selected' : '' %>
+						 	<% p ckr %>
+			                <%= label_tag(:starting_time, "Starting time:") %>
+			                <%= f.text_field :start_time , :value => f.object.start_time.to_time.strftime("%I:%M"), class: "form-control" , style: "width: 80%;" %>
+			                <%= select_tag "time", "<option>AM</option><option #{ckr}>PM</option>".html_safe , class: "form-control" , style: "    width: 20%;float: right;margin-top: -34px"%>
+			            </div>
 
 						<div class="form-group">
 						    <%= f.label(:starting_point, "Starting Point:") %>

@@ -13,7 +13,7 @@
 		      <li><a href="#"><i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;Places</a></li> -->
 		      <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-road" aria-hidden="true"></i>&nbsp;New Route</a></li>
 		      <li><%= link_to " Export Data", "#{route_file_path}.csv" , class: "fa fa-file-excel-o" %></li>
-          <li><%= link_to " Histroy", route_path, class: "fa fa-book" %></li>
+          <li><%= link_to " History", route_path, class: "fa fa-book" %></li>
 			  <li><%= link_to "  Signout", destroy_user_session_path, class: "fa fa-sign-out" , :method => "DELETE" %></li>
 		    </ul>
 <!-- Modal -->
@@ -72,32 +72,67 @@
 		<div class="col-md-10" style="padding: 0 0; height: 100vh; background-color: #f5f5f5; overflow: overlay;">
 			
 			<table class="table table-hover">
-			  <thead>
-			    <tr >
-			      <th colspan="1"></th>
-			      <th>Route Name</th>
-			      <th>Starting Time</th>
-			      <th>Starting Point</th>
-			      <th colspan="3" class="downi"><%= link_to "Export Data", "#{route_file_path}.csv" %></th>
-			    </tr>
-			  </thead>
+			<thead>
+			  <tr>
+				<th colspan="1"></th>
+				<th>Route Name</th>
+				<th>Starting Time</th>
+				<th>Starting Point</th>
+				<th colspan="5"></th>
+			  </tr>
+			</thead>
 
-			  <tbody>
-			  	<% count=0 %>
+			<tbody>
+				<% count=0 %>
 			    <% @rout.each do |rout| %>
 			      <% count = count + 1 %>
 			      <tr>
 			        <td><%= count %></td>
 			        <td><%= rout.route_name %></td>
-			        <td><%= rout.start_time.present? ? rout.start_time.strftime("%I:%M %p") : "" %></td>
+			        <td><%= rout.start_time %></td>
 			        <td><%= rout.starting_point %></td>
+			        <td data-toggle="collapse" data-target="#accordion<%= rout.id %>" class="clickable"><span style="cursor:pointer">Detail</span></td>
+			        <td><%= link_to "Export Data", "#{simple_route_file_path(rout)}.csv" %></td>
 			        <td><%= link_to 'Show', route_show_path(rout) %></td>
 			        <td><%= link_to 'Edit', edit_route_path(rout) %></td>
 			        <td><%= link_to 'Destroy', route_destroy_path(rout), method: :delete, data: { confirm: 'Are you sure?' } %></td>
-			      </tr>
+			      </tr>	
+			      <tr>
+			        <td colspan="9" style="border-top: 0px solid #ddd;">
+			            <div id="accordion<%= rout.id %>" class="collapse">
+			            	<table class="table" style="background-color: #f5f5f5;">
+							<thead>
+							  <tr>
+							  	<th colspan="1"></th>
+							    <th>Address</th>
+							    <th>Starting Point</th>
+							    <th>Delay</th>
+							    <th>Comment</th>
+							  </tr>
+							</thead>
+
+							<tbody>
+								<% counthis = 0 %>
+								<% rout.histroys.each do |hist| %>
+								<% counthis = counthis + 1 %>
+							    <tr >
+							    	<td><%= counthis %></td>
+							        <td><%= hist.address %></td>
+							        <td><%= hist.starting_point %></td>
+							        <td><%= hist.delay %></td>
+							        <td><%= hist.comment %></td>
+							    </tr>
+							    <% end %>
+							</tbody>
+							</table>
+			            </div>
+			        </td>
+			    </tr>		      
 			    <% end %>
-			  </tbody>
+			    
+			</tbody>
 			</table>
+
 		</div>
 	</div>
 </div>

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   patch "route.:id" => "route#update"
   put "route.:id" => "route#update"
   get "routes" => "route#csvfile" , as: "route_file"
+  get "singlecsv/:id" => "route#simplecsvfile" , as: "simple_route_file"
 
   resources :route , only: [:edit]
 

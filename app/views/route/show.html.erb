@@ -16,7 +16,7 @@
 		      <li><a href="#"><i class="fa fa-street-view" aria-hidden="true"></i>&nbsp;Places</a></li> -->
 		      <li><a href="#" data-toggle="modal" data-target="#myModal"><i class="fa fa-road" aria-hidden="true"></i>&nbsp;New Route</a></li>
 		      <li><%= link_to " Export Data", "#{route_file_path}.csv" , class: "fa fa-file-excel-o" %></li>
-          <li><%= link_to " Histroy", route_path, class: "fa fa-book" %></li>
+          <li><%= link_to " History", route_path, class: "fa fa-book" %></li>
 			  <li><%= link_to "  Signout", destroy_user_session_path, class: "fa fa-sign-out" , :method => "DELETE" %></li>
 		    </ul>
 <!-- Modal -->
@@ -74,7 +74,15 @@
 		</div>
 		<div class="col-md-10" style="padding: 0 0; height: 100vh; background-color: #f5f5f5;">
 			<div id="map"></div>
-      <div id="timeduration" class="hidden"></div>
+      <div class="menu-collapsed">
+        <div class="bar"></div>
+          <p class="hidden" id="humberger">
+          <strong style="font-size: xx-large;padding: 8px;margin-left: 30%;">ROUTE</strong><br>
+          <strong>Route Name: </strong><%= @route.route_name %><br>
+          <strong>Starting Point: </strong><%= @route.starting_point %><br>
+          <strong>Starting Time: </strong><%= @route.start_time %><br>
+          </p>
+      </div>
 		</div>
 	</div>
 </div>
@@ -82,6 +90,8 @@
 <script>
     var routi_name = "<%= @route.route_name %>";
     var start_routi = "<%= @route.starting_point %>";
+
+    var checkDur = 0;
 
     var latorg = <%= @route.latitude %>;
     var lngorg = <%= @route.longitude %>;
@@ -193,7 +203,17 @@
           }
         if(c==10){
             
+            <% @route.histroys.each do |hist| %>
+
+            <% if hist.latitude.present? %>
+
+            latdest = <%= hist.latitude %>;
+            lngdest = <%= hist.longitude %>;
             
+            var element = document.getElementById("humberger");
+            var elementdata = document.getElementById("humberger").innerHTML;
+            element.innerHTML = elementdata + "<br><strong>Destination: </strong><%= hist.address %><br><strong>Delay: </strong><%= hist.delay %><br><strong>Comment: </strong><%= hist.comment %><br>";
+
             var rClick = {lat: latdest, lng: lngdest};
             
             marker1 = new google.maps.Marker({
@@ -211,6 +231,10 @@
                 calculateAndDisplayRoute(directionsService, directionsDisplay);
                 
               c=15;  
+
+            <% end %>
+
+            <% end %>
           } 
         
 
@@ -227,6 +251,7 @@ function setMapOnAll(map) {
     
       function calculateAndDisplayRoute(directionsService, directionsDisplay) {
     setMapOnAll(null);
+    console.log("Testing");
         var selectedMode = "DRIVING";
         directionsService.route({
            origin: {lat: latorg, lng: lngorg},  // Haight.
@@ -267,15 +292,16 @@ function setMapOnAll(map) {
               //var icon = asDestination ? destinationIcon : originIcon;
               return function(results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
-        var bounds = new google.maps.LatLngBounds;
+                var bounds = new google.maps.LatLngBounds;
                   //map.fitBounds(bounds.extend(results[0].geometry.location));
                   /*markersArray.push(new google.maps.Marker({
                     map: map,
                     position: results[0].geometry.location,
                     //icon: icon
                   }));*/
+
                 } else {
-                  alert('Geocode was not successful due to: ' + status);
+                  console.log('Geocode was not successful due to: ' + status);
                 }
               };
             };
@@ -290,11 +316,14 @@ function setMapOnAll(map) {
                 //outputDiv.innerHTML += originList[i] + ' to ' + destinationList[j] +
                   //  ': ' + results[j].distance.text + ' in ' +
                     //results[j].duration.text + '<br>';
-          //console.log(results[j].duration.text);
-          if(results[j].duration.text != "1 min"){
-              var element = document.getElementById("timeduration");
-              element.innerHTML = "Route Name: " + routi_name + "<br>Starting Point: " + start_routi +"<br>Distance: " + results[j].distance.text +"<br>Duration: " + results[j].duration.text;
-              $("#timeduration").removeClass("hidden");
+          
+          if(results[j].duration.text != "1 min" && checkDur == 0){
+              checkDur=1;
+              var element = document.getElementById("humberger");
+              var elementdata = document.getElementById("humberger").innerHTML;
+              element.innerHTML = elementdata + "<strong>Duration: </strong>" + results[j].duration.text + "<br>";
+              /*$("#timeduration").removeClass("hidden");*/
+              console.log(results[j].duration.text);
           }
               }
             }
@@ -312,3 +341,9 @@ function setMapOnAll(map) {
     </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoUyblkGqwp2lFuWQb0v_-J_mI5sYJYPc&libraries=places&callback=initMap"
 async defer></script>
+<script type="text/javascript">
+  $(".menu-collapsed").click(function() {
+    $(this).toggleClass("menu-expanded");
+    $("#humberger").toggleClass("hidden");
+  });
+</script>
