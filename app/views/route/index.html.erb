@@ -78,7 +78,7 @@
 				<th>Route Name</th>
 				<th>Starting Time</th>
 				<th>Starting Point</th>
-				<!-- <th>Delay</th> -->
+				<th>Delay</th>
 				<th colspan="5"></th>
 			  </tr>
 			</thead>
@@ -92,7 +92,7 @@
 			        <td><%= rout.route_name %></td>
 			        <td><%= rout.start_time %></td>
 			        <td><%= rout.starting_point %></td>
-			        <!-- <td><a href="#" data-toggle="modal" data-target="#addDelay" >Delay</a></td> -->
+			        <td><a href="#" data-toggle="modal" data-target="#addDelay" ><%= rout.delay.present? ? rout.delay : "Add Delay" %></a></td>
 			        <td data-toggle="collapse" data-target="#accordion<%= rout.id %>" class="clickable"><span style="cursor:pointer">Detail</span></td>
 			        <td><%= link_to "Export Data", "#{simple_route_file_path(rout)}.csv" %></td>
 			        <td><%= link_to 'Show', route_show_path(rout) %></td>
@@ -146,16 +146,28 @@
         <h4 class="modal-title">Add Delay</h4>
       </div>
       <div class="modal-body">
-        			<%= form_tag(route_path, method: "post" , multipart: true ) do %>
-						<div class="form-group">
-						    <%= label_tag(:route_name, "Add Delay:") %>
-				  			<%= text_field_tag :route_name , nil , class: "form-control"%>
-						</div>
+        			<%= form_for Route.last , :html => { :multipart => true } do |f| %>
+					  <% if Route.last.errors.any? %>
+					    <div id="error_explanation">
+					      <h2><%= pluralize(@route.errors.count, "error") %> prohibited this kitab from being saved:</h2>
 
+					      <ul>
+					      <% Route.last.errors.full_messages.each do |message| %>
+					        <li><%= message %></li>
+					      <% end %>
+					      </ul>
+					    </div>
+					  <% end %>
+
+					  	<div class="form-group">
+						    <%= f.label(:delay, "Add Delay:") %>
+				  			<%= f.text_field :delay ,  class: "form-control"%>
+				  			<%= select_tag "tim_f", "<option>min</option><option>hour</option>".html_safe , class: "form-control" , style: "    width: 20%;float: right;margin-top: -34px"%>
+						</div>
 					  
 					  </div>
       <div class="modal-footer">
-      	<%= submit_tag "Add Delay" , class: "btn btn-default" %>
+      	<%= f.submit "Add Delay" , class: "btn btn-default" %>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
 					  

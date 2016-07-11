@@ -48,36 +48,44 @@ class RouteController < ApplicationController
 	def update
 		p params
 		@route = Route.find(params[:id])
-		s_time = params[:route][:start_time] + " " + params[:time]
-		file_data = params[:file_upload]
-		if file_data.respond_to?(:read)
-		  xml_contents = file_data.read
-		  p "read"
-		elsif file_data.respond_to?(:path)
-		  xml_contents = File.read(file_data.path)
-		  p "path"
+		if params[:route][:delay].present?
+			d_tim =  params[:route][:delay] + " " +  params[:tim_f]
+			@route.update(delay: params[:route][:delay])
+			p "Delay Added"
+			redirect_to :back, notice: 'Route was successfully updated.'
 		else
-		  logger.error "Bad file_data: #{file_data.class.name}: #{file_data.inspect}"
-		end
-		if xml_contents.present? && file_data.original_filename.split('.')[-1]=='csv'
-			@csv = CSV.parse(xml_contents, :headers => true)
-			@csv.each do |row|
-				p row.to_hash
-				hist = Histroy.create(address: row.to_hash['address'] , route_id: @route.id , delay: row.to_hash['delay'], comment: row.to_hash['comment'], starting_point: row.to_hash['starting_point'])
+			s_time = params[:route][:start_time] + " " + params[:time]
+			file_data = params[:file_upload]
+			if file_data.respond_to?(:read)
+			  xml_contents = file_data.read
+			  p "read"
+			elsif file_data.respond_to?(:path)
+			  xml_contents = File.read(file_data.path)
+			  p "path"
+			else
+			  logger.error "Bad file_data: #{file_data.class.name}: #{file_data.inspect}"
 			end
-		else
-			p "Invalid file"
+			if xml_contents.present? && file_data.original_filename.split('.')[-1]=='csv'
+				@csv = CSV.parse(xml_contents, :headers => true)
+				@csv.each do |row|
+					p row.to_hash
+					hist = Histroy.create(address: row.to_hash['address'] , route_id: @route.id , delay: row.to_hash['delay'], comment: row.to_hash['comment'], starting_point: row.to_hash['starting_point'])
+				end
+			else
+				p "Invalid file"
+			end
+			@route.update(start_time: s_time)
+		    respond_to do |format|
+		      if @route.update(route_update_params)
+		        format.html { redirect_to route_path, notice: 'Route was successfully updated.' }
+		        format.json { render :index, status: :updated, location: @route }
+		      else
+		        format.html { render :edit }
+		        format.json { render json: @home.errors, status: :unprocessable_entity }   
+		      end
+		    end
 		end
-		@route.update(start_time: s_time)
-	    respond_to do |format|
-	      if @route.update(route_update_params)
-	        format.html { redirect_to route_path, notice: 'Route was successfully updated.' }
-	        format.json { render :index, status: :updated, location: @route }
-	      else
-	        format.html { render :edit }
-	        format.json { render json: @home.errors, status: :unprocessable_entity }   
-	      end
-	    end
+		
 	end
 
 	def destroy
