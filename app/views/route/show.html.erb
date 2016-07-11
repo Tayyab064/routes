@@ -100,6 +100,7 @@
     var lngdest = <%= @route.histroys.first.longitude %>;
   
     var c=0;
+    var d=0;
     
     var marker = [];
     
@@ -202,10 +203,16 @@
                   c=10;
           }
         if(c==10){
-            
+            var counter = 0 ;
+            var colour = new Array("red", "blue", "green" , "yellow");
             <% @route.histroys.each do |hist| %>
 
             <% if hist.latitude.present? %>
+
+            if(d==1){
+              latorg = latdest;
+              lngorg = lngdest;
+            }
 
             latdest = <%= hist.latitude %>;
             lngdest = <%= hist.longitude %>;
@@ -224,17 +231,52 @@
                   })
                   marker.push(marker1);
                 
-                var directionsDisplay = new google.maps.DirectionsRenderer;
+                var directionsDisplay = new google.maps.DirectionsRenderer({ polylineOptions: { strokeColor: colour[counter] } });
                 var directionsService = new google.maps.DirectionsService;
                 directionsDisplay.setMap(map);
 
                 calculateAndDisplayRoute(directionsService, directionsDisplay);
+                if(counter == 3) {
+                  counter = 0
+                }else{
+                  counter += 1 ;
+                }
                 
-              c=15;  
+              c=15;
+              d=1;  
 
             <% end %>
 
             <% end %>
+
+            <% if @route.histroys.count > 0 %>
+              latorg = latdest;
+              lngorg = lngdest;
+
+              latdest = <%= @route.latitude %>;
+              lngdest = <%= @route.longitude %>;
+              
+              var element = document.getElementById("humberger");
+              var elementdata = document.getElementById("humberger").innerHTML;
+              element.innerHTML = elementdata + "<br><strong>Destination: </strong><%= @route.starting_point %><br><strong>Delay: </strong>Delay<br><strong>Comment: </strong>Comment<br>";
+
+              /*var rClick = {lat: latdest, lng: lngdest};
+              
+              marker1 = new google.maps.Marker({
+                      map: map,
+                      position: rClick,
+                      
+                      title:'Account Name: '
+                    })
+                    marker.push(marker1);*/
+                  
+                  var directionsDisplay = new google.maps.DirectionsRenderer;
+                  var directionsService = new google.maps.DirectionsService;
+                  /*directionsDisplay.setMap(map);*/
+
+                  calculateAndDisplayRoute(directionsService, directionsDisplay);
+            <% end %>
+
           } 
         
 

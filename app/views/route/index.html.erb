@@ -78,6 +78,7 @@
 				<th>Route Name</th>
 				<th>Starting Time</th>
 				<th>Starting Point</th>
+				<!-- <th>Delay</th> -->
 				<th colspan="5"></th>
 			  </tr>
 			</thead>
@@ -91,6 +92,7 @@
 			        <td><%= rout.route_name %></td>
 			        <td><%= rout.start_time %></td>
 			        <td><%= rout.starting_point %></td>
+			        <!-- <td><a href="#" data-toggle="modal" data-target="#addDelay" >Delay</a></td> -->
 			        <td data-toggle="collapse" data-target="#accordion<%= rout.id %>" class="clickable"><span style="cursor:pointer">Detail</span></td>
 			        <td><%= link_to "Export Data", "#{simple_route_file_path(rout)}.csv" %></td>
 			        <td><%= link_to 'Show', route_show_path(rout) %></td>
@@ -132,6 +134,37 @@
 			    
 			</tbody>
 			</table>
+
+<!-- Modal -->
+<div id="addDelay" class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Add Delay</h4>
+      </div>
+      <div class="modal-body">
+        			<%= form_tag(route_path, method: "post" , multipart: true ) do %>
+						<div class="form-group">
+						    <%= label_tag(:route_name, "Add Delay:") %>
+				  			<%= text_field_tag :route_name , nil , class: "form-control"%>
+						</div>
+
+					  
+					  </div>
+      <div class="modal-footer">
+      	<%= submit_tag "Add Delay" , class: "btn btn-default" %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+					  
+					<% end %>
+      
+    </div>
+
+  </div>
+</div>
 
 		</div>
 	</div>
